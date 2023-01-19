@@ -13,6 +13,7 @@ export interface PlanetInfo {
         source: string;
     };
     rotation: string;
+    color: string;
     revolution: string;
     radius: string;
     temperature: string;

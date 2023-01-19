@@ -1,17 +1,19 @@
 import Header from "./Header";
 import styled from 'styled-components';
+import { useState } from 'react';
 
 export type MovesContextProps = {
     children?: JSX.Element | JSX.Element[]
   };
 
 const Layout = ({ children }: MovesContextProps) => {
+
+    const [menuOpen, setMenuOpen] = useState<boolean>(false)
+
     return ( 
         <Wrapper>
-            <Header />
-            <Container>
-                { children }
-            </Container>
+            <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+            {!menuOpen ? children : null }
         </Wrapper>
      );
 }
@@ -23,9 +25,3 @@ const Wrapper =  styled.div`
     min-height: 100vh;
 `
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0px 24px 47px 24px;
-`

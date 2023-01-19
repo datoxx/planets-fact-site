@@ -29,5 +29,9 @@ const Svg = styled(attrs)<SvgPorps>`
     width: 24px;
     height: 17px;
     opacity: ${props => props.menuOpen ? 0.25 : 1};
+    cursor:pointer;
 
+    @media (min-width: 768px) {
+         display: none;
+    }
 `;

@@ -1,37 +1,51 @@
 import styled from 'styled-components'
 import BurgerIcon from './svg/BurgerIcon';
-import { useState } from 'react';
 import { PlanetInfo } from '../type/planet';
-import data from "../data.json"
+import{ planetsDetails} from '../data';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
-const Header = () => {
 
-  const [menuOpen, setMenuOpen] = useState<boolean>(false)
-  const colors: string[] = ["#419EBB", "#EDA249", "#6D2ED5", "#D14C32", "#D83A34", "#CD5120", "#1EC1A2", "#2D68F0"]
+interface HeaderProps {
+  menuOpen: boolean;
+  setMenuOpen: (e:boolean) => void;
+}
 
+const Header = ({menuOpen, setMenuOpen}: HeaderProps) => {
+
+    const { asPath } = useRouter()
     
-
     return (    
         <Container>
-          <TitleLogo>THE PLANETS</TitleLogo>    
+            <TitleLogo>THE PLANETS</TitleLogo>   
+            <Nav>
+              <MenuLists>
+                {Object.values(planetsDetails)?.map((planet: PlanetInfo): JSX.Element => (
+                    <Link href={"/" + planet.name} key={planet.name} >
+                        <PlanetName click={asPath.substring(1) === planet.name} >{planet.name} </PlanetName>
+                    </Link>
+                  ))}  
+              </MenuLists>
+            </Nav> 
           <BurgerIcon menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-          { menuOpen && 
+          { menuOpen  ?
             <MobileContainer>      
               <ul>
-                {data?.map((planet: PlanetInfo, index): JSX.Element => (
-                  <Link href={planet.name} key={planet.name} >
+                {Object.values(planetsDetails)?.map((planet: PlanetInfo): JSX.Element => (
+                  <Link onClick={() => setMenuOpen(false)} href={"/" + planet.name} key={planet.name} >
                     <MobileMenuList> 
                       <CircleAndNameContainer >
-                        <LsitCircle planetColor={colors[index]} />
-                        <PlanetName>{planet.name} </PlanetName> 
+                        <LsitCircle planetColor={planet.color} />
+                        <PlanetNameMobile>{planet.name} </PlanetNameMobile> 
                       </CircleAndNameContainer>
                       <img src='/assets/icon-chevron.svg' />
                     </MobileMenuList>
                   </Link>
                  ))}
               </ul>
-            </MobileContainer>}
+            </MobileContainer>
+            : null}
         </Container>
       );
 }
@@ -46,10 +60,16 @@ const Container = styled.div`
   width: 100%;
   padding: 16px 24px;
   border-bottom: 1px solid rgb(255, 255, 255, .2);
+  @media (min-width: 768px) {
+    padding: 32px 51px 27px 51px;
+    flex-direction: column;
+    gap: 39px;
+    }
 `
 
 const TitleLogo = styled.h1`
   font-family: 'Antonio';
+  font-style: normal;
   font-weight: 400;
   font-size: 28px;
   line-height: 36px;
@@ -58,17 +78,34 @@ const TitleLogo = styled.h1`
   color: #FFFFFF;
 `
 
+const Nav = styled.nav`
+  display: none;
+  @media (min-width: 768px) {
+      display: block;
+  }
+`
+
+const MenuLists = styled.ul`
+  display: flex;
+  align-items: center;
+  gap: 33px;
+`
+
 const MobileContainer = styled.nav`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: #070724;
   position: absolute;
   top: 69px;
   left: 0px;
   bottom: 0px;
+  z-index: 20;
   padding: 44px 24px 67px 24px;
+  @media (min-width: 768px) {
+      display: none;
+    }
 `
 
 const MobileMenuList = styled.li`
@@ -86,17 +123,17 @@ const CircleAndNameContainer = styled.div`
   gap: 25px;
 `
 
-interface LsitCircleProps {
+interface LsitProps {
   planetColor: string;
 }
 
-const LsitCircle = styled.div<LsitCircleProps>`
+const LsitCircle = styled.div<LsitProps>`
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background: ${props => props.planetColor};
 `
-const PlanetName = styled.span`
+const PlanetNameMobile = styled.span`
   font-family: 'League Spartan';
   font-style: normal;
   font-weight: 700;
@@ -105,5 +142,25 @@ const PlanetName = styled.span`
   letter-spacing: 1.36364px;
   text-transform: uppercase;
   color: #FFFFFF;
+`
 
+interface PlanetNameProps {
+  click: boolean;
+}
+
+const PlanetName = styled.li<PlanetNameProps>`
+  font-family: 'League Spartan';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 25px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  opacity: ${props => props.click ? 1 : 0.70};
+  list-style: none;
+
+  &:hover {
+    opacity: 1;
+  }
 `
