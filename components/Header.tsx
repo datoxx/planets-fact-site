@@ -17,13 +17,14 @@ const Header = ({menuOpen, setMenuOpen}: HeaderProps) => {
     const { asPath } = useRouter()
     
     return (    
+      <Wrapper>
         <Container>
-            <TitleLogo>THE PLANETS</TitleLogo>   
+            <Link href={"/Mercury"}><TitleLogo>THE PLANETS</TitleLogo></Link>
             <Nav>
               <MenuLists>
                 {Object.values(planetsDetails)?.map((planet: PlanetInfo): JSX.Element => (
                     <Link href={"/" + planet.name} key={planet.name} >
-                        <PlanetName click={asPath.substring(1) === planet.name} >{planet.name} </PlanetName>
+                        <PlanetName planetColor={planet.color} click={asPath.substring(1) === planet.name} >{planet.name} </PlanetName>
                     </Link>
                   ))}  
               </MenuLists>
@@ -47,24 +48,36 @@ const Header = ({menuOpen, setMenuOpen}: HeaderProps) => {
             </MobileContainer>
             : null}
         </Container>
+        </Wrapper>
       );
 }
  
 export default Header;
 
 
+const Wrapper = styled.div`
+  width: 100%;
+  border-bottom: 1px solid rgb(255, 255, 255, .2);
+`
+
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   padding: 16px 24px;
-  border-bottom: 1px solid rgb(255, 255, 255, .2);
   @media (min-width: 768px) {
     padding: 32px 51px 27px 51px;
     flex-direction: column;
     gap: 39px;
     }
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 41px 27px 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
 `
 
 const TitleLogo = styled.h1`
@@ -76,6 +89,9 @@ const TitleLogo = styled.h1`
   letter-spacing: -1.05px;
   text-transform: uppercase;
   color: #FFFFFF;
+  @media (min-width: 1024px) {
+    padding-top: 22px;
+  }
 `
 
 const Nav = styled.nav`
@@ -83,7 +99,7 @@ const Nav = styled.nav`
   @media (min-width: 768px) {
       display: block;
   }
-`
+` 
 
 const MenuLists = styled.ul`
   display: flex;
@@ -146,7 +162,9 @@ const PlanetNameMobile = styled.span`
 
 interface PlanetNameProps {
   click: boolean;
+  planetColor: string;
 }
+
 
 const PlanetName = styled.li<PlanetNameProps>`
   font-family: 'League Spartan';
@@ -162,5 +180,15 @@ const PlanetName = styled.li<PlanetNameProps>`
 
   &:hover {
     opacity: 1;
+  }
+
+  @media (min-width: 1024px) {
+    padding-top: ${props => props.click ? "29px" : "33px"};
+    border-top: ${props => props.click ? `4px solid ${props.planetColor}` : ""};
+
+    &:hover {
+      padding-top: 29px;
+      border-top: ${props => `4px solid ${props.planetColor}` };
+    }
   }
 `

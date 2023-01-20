@@ -31,6 +31,9 @@ const DotWrapper = styled.div`
   display: flex;
   align-items: flex-end;
   margin-bottom: 40%;
+  @media (min-width: 768px) {
+    margin-bottom: 10%;
+    }
 `;
 
 interface DotProps {

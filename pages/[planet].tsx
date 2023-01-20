@@ -3,6 +3,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import styled from 'styled-components';
 import { useState } from 'react';
 import Link from 'next/link';
+import PlanetStat from '../components/PlanetStat';
 
 
 export  const getStaticPaths: GetStaticPaths = async () => {
@@ -46,7 +47,7 @@ const Planet = ({ planet }:any) => {
         </PlanetDashboard>
         <Container>
           <PlantImageAndContentContainer>
-            <div>
+            <PlanetImageContainer>
               {
                 planetButton === "overview" 
                   ? <img className='planet' src={planet.images.planet} alt='planet' />
@@ -57,8 +58,8 @@ const Planet = ({ planet }:any) => {
                     <img className='geologiImg' src={planet.images.geology} alt='planet' />
                   </GeologiImgContainer>
               }
-            </div>
-            <div>
+            </PlanetImageContainer>
+            <PlanetContantAndDeshboardContainer>
               {/* planet content */}
               <PlanetContentContainer>
                   <Title>{planet.name}</Title>
@@ -90,27 +91,24 @@ const Planet = ({ planet }:any) => {
                   </Sourse>
               </PlanetContentContainer>
               {/* planet buttons */}
-              {/* <div></div> */}
-            </div>
-          <StatContainer>
-            <OneStatContainer>
-                <StatTitle>ROTATION TIME</StatTitle>
-                <StatNumber>{planet.rotation}</StatNumber>
-            </OneStatContainer>
-            <OneStatContainer>
-                <StatTitle >REVOLUTION TIME</StatTitle>
-                <StatNumber>{planet.revolution}</StatNumber>
-            </OneStatContainer>
-            <OneStatContainer>
-               <StatTitle>radius</StatTitle>
-               <StatNumber>{planet.radius}</StatNumber>
-            </OneStatContainer>
-            <OneStatContainer>
-                <StatTitle>AVERAGE TEMP.</StatTitle>
-                <StatNumber>{planet.temperature}</StatNumber>
-            </OneStatContainer>
-          </StatContainer>
+              <DesctopPlanetButtonsContainer>
+                    <DesctopPlanetButton planetColor={planet.color} textColor={planetButton === "overview"} onClick={() => setPlanetButton("overview")} >
+                        <span className='number'>01</span>
+                        <span className='text'>OVERVIEW</span>
+                    </DesctopPlanetButton>
+                    <DesctopPlanetButton planetColor={planet.color} textColor={planetButton === "structure"} onClick={() => setPlanetButton("structure")}>
+                        <span className='number'>02</span>
+                        <span className='text'>Internal Structure</span>
+                    </DesctopPlanetButton>
+                    <DesctopPlanetButton planetColor={planet.color} textColor={planetButton === "geology"} onClick={() => setPlanetButton("geology")}>
+                        <span className='number'>03</span>
+                        <span className='text' >Surface Geology</span>
+                    </DesctopPlanetButton>
+              </DesctopPlanetButtonsContainer>
+            </PlanetContantAndDeshboardContainer>
           </PlantImageAndContentContainer>
+
+            <PlanetStat planet={planet} />
 
         </Container>
       </>
@@ -128,6 +126,9 @@ const PlanetDashboard = styled.div`
   gap: 43px;
   padding: 20px 24px 0 24px;;
   border-bottom: 1px solid rgb(255, 255, 255, .2);
+  @media (min-width: 480px) {
+    justify-content: space-around;
+  }
   @media (min-width: 768px) {
       display: none;
   }
@@ -162,6 +163,21 @@ const Container = styled.div`
 
   .planet {
     width: 200px;
+    @media (min-width: 768px) {
+      width: 280px;
+   }
+   @media (min-width: 1024px) {
+      width: 380px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    padding: 0px 40px 36px 40px;
+   }
+   
+  @media (min-width: 1024px) {
+    max-width: 1440px;
+    margin: 0 auto;
   }
 `
 
@@ -170,12 +186,32 @@ const PlantImageAndContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 80px;
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 120px;
+   }
+
+`
+const PlanetImageContainer  = styled.div`
+    @media (min-width: 1024px) {
+      display: flex;
+      justify-content: center;
+      max-width: 70%;
+      width: 100%;
+    }
 `
 
 const GeologiImgContainer = styled.div`
   position: relative;
   .Gologiplanet {
     width: 200px;
+    @media (min-width: 768px) {
+      width: 280px;
+   }
+   @media (min-width: 1024px) {
+        width: 380px;
+    }
   }
 
   .geologiImg{
@@ -184,6 +220,76 @@ const GeologiImgContainer = styled.div`
     left: 50%;
     transform: translate(-50%); 
     width: 100px;
+    @media (min-width: 768px) {
+      width: 120px;
+      top: 50%;
+   }
+   @media (min-width: 1024px) {
+      width: 150px;
+    }
+  }
+
+`
+
+
+const PlanetContantAndDeshboardContainer = styled.div`
+  margin-top: 80px;
+  @media (min-width: 768px) {
+      display: flex;
+      width: 100%;
+      gap: 69px;
+      align-items: center;
+   }
+  @media (min-width: 1024px) {
+    flex-direction: column;
+    gap: 39px;
+    max-width: 30%;
+    margin-top: 0px;
+  }
+`
+
+const DesctopPlanetButtonsContainer = styled.div`
+  display: none;
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 16px;
+  }
+`
+
+const DesctopPlanetButton = styled.div<PlanetButonProps>`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 17px;
+  height: 40px;
+  padding-left: 20px;
+  mix-blend-mode: normal;
+  border: 1px solid rgb(255, 255, 255, .2);
+  background: ${props => props.textColor ? props.planetColor : "none"};
+  font-family: 'League Spartan';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 25px;
+  letter-spacing: 1.92857px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  cursor: pointer;
+
+  .number {
+    mix-blend-mode: normal;
+    opacity: 0.5;
+  }
+
+  &:hover {
+    background: rgb(216, 216, 216, 0.2);
+    mix-blend-mode: normal;
+  }
+  @media (min-width: 1024px) {
+      gap: 28px;
+      padding-left: 28px;
   }
 `
 
@@ -191,7 +297,10 @@ const PlanetContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80px;
+  @media (min-width: 768px) {
+    align-items: start;
+    width: 100%;
+   }
 `
 const Title = styled.h2`
   font-family: 'Antonio';
@@ -201,6 +310,14 @@ const Title = styled.h2`
   line-height: 52px;
   text-transform: uppercase;
   color: #FFFFFF;
+  @media (min-width: 768px) {
+    font-size: 48px;
+    line-height: 62px;
+   }
+  @media (min-width: 1024px) {
+    font-size: 80px;
+    line-height: 104px;
+  }
 `
 
 const Paragraph = styled.p`
@@ -212,6 +329,13 @@ const Paragraph = styled.p`
   text-align: center;
   color: #FFFFFF;
   margin-top: 16px;
+  @media (min-width: 768px) {
+    margin-top: 24px;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: start;
+   }
+
 `
 
 const Sourse = styled.div`
@@ -237,45 +361,8 @@ const Sourse = styled.div`
     font-weight: 700;
     cursor: pointer;
   }
+  @media (min-width: 1024px) {
+    margin-top: 24px;
+  }
 
-`
-
-const StatContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  margin-top: 28px;
-`
-
-const OneStatContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 9px 24px 13px 24px;
-  border: 1px solid rgb(255, 255, 255, .2);
-`
-
-const StatTitle = styled.span`
-  font-family: 'League Spartan';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 8px;
-  line-height: 16px;
-  letter-spacing: 0.727273px;
-  text-transform: uppercase;
-  color: #FFFFFF;
-  mix-blend-mode: normal;
-  opacity: 0.5;
-`
-const StatNumber = styled.span`
-  font-family: 'Antonio';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 26px;
-  text-align: right;
-  letter-spacing: -0.75px;
-  text-transform: uppercase;
-  color: #FFFFFF;
 `
